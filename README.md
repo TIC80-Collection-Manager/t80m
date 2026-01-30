@@ -267,7 +267,7 @@ Output:
 
 If you publish **paid games on itch.io**, consider releasing a **free demo** (like *Last in Space* or *Bone Knight*).
 
-This tool scrapes the playable HTML version. Games flagged with `distribution_license=T` are excluded when using:
+This tool scrapes the playable HTML version. Games flagged with `distribution_license=F` are excluded when using:
 
 ```bash
 --export-curated-distribution-safe
