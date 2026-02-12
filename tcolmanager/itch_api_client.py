@@ -1,3 +1,4 @@
+import os
 import re
 import time
 from typing import Any
@@ -69,9 +70,23 @@ def http_get(session: requests.Session, url: str, stream: bool = False, allow_re
 ### If it fails, you can try to delete the cf_clearance cookie and do the captcha again.
 """
                     # Ensure parent directory exists
-                    header_file.parent.mkdir(parents=True, exist_ok=True)
-                    _ = header_file.write_text(instructions, encoding="utf-8")
-                        
+                    try:
+                        os.makedirs(header_file.parent, exist_ok=True)
+                    except OSError as e:
+                        print(f"[!] Could not create directory {header_file.parent}: {e}")
+                        return None
+
+                    # Verify directory exists before writing
+                    if not header_file.parent.exists():
+                        print(f"[!] Directory does not exist: {header_file.parent}")
+                        return None
+
+                    try:
+                        _ = header_file.write_text(instructions, encoding="utf-8")
+                    except FileNotFoundError:
+                        print(f"[!] Cannot write to {header_file}. Check permissions.")
+                        return None
+
                     try:
                         _ = subprocess.run([config.USER_EDITOR, str(header_file)], check=True)
                         headers_str = header_file.read_text(encoding="utf-8")
